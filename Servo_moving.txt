@@ -1,0 +1,83 @@
+// moving servos one by one
+#include <DynamixelShield.h>
+
+const uint8_t AXIS_4_ID = 1;
+const uint8_t AXIS_5_ID = 2;
+const uint8_t AXIS_6_ID = 3;
+const uint8_t AXIS_GRIPPER_ID = 4;
+const float DXL_PROTOCOL_VERSION = 2.0;
+const long BIG_MOTOR_BAUD_RATE = 57600;
+const long SMALL_MOTOR_BAUD_RATE = 1000000;
+
+DynamixelShield dxl;
+
+//This namespace is required to use Control table item names
+using namespace ControlTableItem;
+
+void setup() {
+  // Set Port Protocol Version. This has to match with DYNAMIXEL protocol version.
+  dxl.setPortProtocolVersion(DXL_PROTOCOL_VERSION);
+
+  // Ping motors
+  dxl.begin(BIG_MOTOR_BAUD_RATE); // big motor baud rate
+  dxl.ping(AXIS_4_ID);
+  dxl.begin(BIG_MOTOR_BAUD_RATE); // big motor baud rate
+  dxl.ping(AXIS_5_ID);
+  dxl.begin(SMALL_MOTOR_BAUD_RATE); // small motor baud rate
+  dxl.ping(AXIS_6_ID);
+  dxl.begin(SMALL_MOTOR_BAUD_RATE); // small motor baud rate
+  dxl.ping(AXIS_GRIPPER_ID);
+
+  // Turn off torque when configuring items in EEPROM area
+  dxl.begin(BIG_MOTOR_BAUD_RATE); // big motor baud rate
+  dxl.torqueOff(AXIS_4_ID);
+  dxl.setOperatingMode(AXIS_4_ID, OP_POSITION);
+  dxl.torqueOn(AXIS_4_ID);
+
+  dxl.begin(BIG_MOTOR_BAUD_RATE); // big motor baud rate
+  dxl.torqueOff(AXIS_5_ID);
+  dxl.setOperatingMode(AXIS_5_ID, OP_POSITION);
+  dxl.torqueOn(AXIS_5_ID);
+
+  dxl.begin(SMALL_MOTOR_BAUD_RATE); // small motor baud rate
+  dxl.torqueOff(AXIS_6_ID);
+  dxl.setOperatingMode(AXIS_6_ID, OP_POSITION);
+  dxl.torqueOn(AXIS_6_ID);
+
+  dxl.begin(SMALL_MOTOR_BAUD_RATE); // small motor baud rate
+  dxl.torqueOff(AXIS_GRIPPER_ID);
+  dxl.setOperatingMode(AXIS_GRIPPER_ID, OP_POSITION);
+  dxl.torqueOn(AXIS_GRIPPER_ID);
+}
+
+void loop() {
+  // moving motors to degrees (the only numbers at setGoalPosition() method here)
+  // moving axis 4
+  dxl.begin(BIG_MOTOR_BAUD_RATE); // big motor baud rate
+  dxl.setGoalPosition(AXIS_4_ID, 0, UNIT_DEGREE); // 0 degree
+  delay(2000);
+  dxl.setGoalPosition(AXIS_4_ID, 180, UNIT_DEGREE); // 180 degree
+  delay(2000);
+
+  // moving axis 5
+  dxl.begin(BIG_MOTOR_BAUD_RATE); // big motor baud rate
+  dxl.setGoalPosition(AXIS_5_ID, 0, UNIT_DEGREE);
+  delay(2000);
+  dxl.setGoalPosition(AXIS_5_ID, 180, UNIT_DEGREE);
+  delay(2000);
+
+
+  // moving axis 6
+  dxl.begin(SMALL_MOTOR_BAUD_RATE); // small motor baud rate
+  dxl.setGoalPosition(AXIS_6_ID, 0, UNIT_DEGREE);
+  delay(2000);
+  dxl.setGoalPosition(AXIS_6_ID, 180, UNIT_DEGREE);
+  delay(2000);
+
+  // moving gripper servo
+  dxl.begin(SMALL_MOTOR_BAUD_RATE); // small motor baud rate
+  dxl.setGoalPosition(AXIS_GRIPPER_ID, 0, UNIT_DEGREE);
+  delay(2000);
+  dxl.setGoalPosition(AXIS_GRIPPER_ID, 180, UNIT_DEGREE);
+  delay(2000);
+}

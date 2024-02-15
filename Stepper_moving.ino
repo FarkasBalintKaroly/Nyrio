@@ -1,0 +1,85 @@
+// cables: A1: black, A2: green, B1: blue, B2: red
+
+#include <AccelStepper.h>
+
+
+#define J1_STEP_PIN    54
+#define J1_DIR_PIN     55
+#define J1_ENABLE_PIN  38
+
+#define J2_STEP_PIN    A6
+#define J2_DIR_PIN     A7
+#define J2_ENABLE_PIN  A2
+
+#define J3_STEP_PIN    46
+#define J3_DIR_PIN     48
+#define J3_ENABLE_PIN  A8
+
+AccelStepper stepperJ1(AccelStepper::DRIVER, J1_STEP_PIN, J1_DIR_PIN);
+AccelStepper stepperJ2(AccelStepper::DRIVER, J2_STEP_PIN, J2_DIR_PIN);
+AccelStepper stepperJ3(AccelStepper::DRIVER, J3_STEP_PIN, J3_DIR_PIN);
+
+void setup() {
+
+  stepperJ1.setMaxSpeed(5000);
+  stepperJ1.setAcceleration(1000);
+
+  stepperJ2.setMaxSpeed(2000);
+  stepperJ2.setAcceleration(500);
+  
+  stepperJ3.setMaxSpeed(10000);
+  stepperJ3.setAcceleration(1000);
+ 
+  pinMode(J1_ENABLE_PIN, OUTPUT);
+  digitalWrite(J1_ENABLE_PIN, LOW);
+
+  pinMode(J2_ENABLE_PIN, OUTPUT);
+  digitalWrite(J2_ENABLE_PIN, LOW);
+
+  pinMode(J3_ENABLE_PIN, OUTPUT);
+  digitalWrite(J3_ENABLE_PIN, LOW);
+    
+  //1. pont
+  stepperJ1.moveTo(-1000);
+  stepperJ2.moveTo(-1000);
+  stepperJ3.moveTo(-1000);
+
+  while (stepperJ1.distanceToGo() != 0 || stepperJ2.distanceToGo() != 0 || stepperJ3.distanceToGo() != 0) {
+    stepperJ1.run();
+    stepperJ2.run();
+    stepperJ3.run();
+  }
+  //felvétel
+  delay(1000);
+}
+
+void loop()
+{
+  delay(1000);
+  //köztes pont
+  stepperJ1.moveTo(-1000);
+  stepperJ2.moveTo(+1000);
+  stepperJ3.moveTo(+1000);
+
+
+  while (stepperJ1.distanceToGo() != 0 || stepperJ2.distanceToGo() != 0 || stepperJ3.distanceToGo() != 0)
+  {
+    stepperJ1.run();
+    stepperJ2.run();
+    stepperJ3.run();
+  }
+  delay(1000);
+
+  //2. pont
+  stepperJ1.moveTo(+1000);
+  stepperJ2.moveTo(-1000);
+  stepperJ3.moveTo(-1000);
+
+  while (stepperJ1.distanceToGo() != 0 || stepperJ2.distanceToGo() != 0 || stepperJ3.distanceToGo() != 0)
+  {
+    stepperJ1.run();
+    stepperJ2.run();
+    stepperJ3.run();
+  }
+  delay(1000);
+}

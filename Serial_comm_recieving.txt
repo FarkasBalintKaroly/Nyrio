@@ -1,0 +1,19 @@
+// Communication between arduinos
+// Stepper controlling arduino mega side
+// recieving data through serial communication
+
+int data;
+
+void setup() {
+  Serial1.begin(9600); // begin communication through serial 1 port, with 9600 baud rate -- communication with other arduino
+  Serial.begin(9600); // begin communication with Arduino IDE -- monitoring the recieved signal Serial Monitor
+
+}
+
+void loop() {
+  data = Serial1.read(); // reads the data from serial 1
+  Serial.write(data);
+  delay(1000);
+  
+
+}
